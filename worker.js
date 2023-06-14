@@ -27,9 +27,11 @@ function parseCSV(filePath) {
         })
 }
 
-
 parentPort.on('message', message => {
     let filePath = message;
     let result = parseCSV(filePath);
     parentPort.postMessage(result)
 })
+
+
+// node index.js csv_folder
