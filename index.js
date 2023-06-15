@@ -9,9 +9,6 @@ if (process.argv.length < 3) {
 }
 
 const csvFilesArray = await readdir(directoryPath);
-//const numWorkers = Math.min(10, csvFilesArray.length);
-
-//const numThreads = csvFilesArray.length;
 
 let numThreads = 0;
 let worker;
