@@ -11,7 +11,6 @@ function parseCSV(filePath) {
     const pathChunk = filePath.split('\\')
     const fileName = pathChunk[1].replace(".csv", ".json");
 
-
     const results = [];
     fs.createReadStream(filePath)
         .pipe(csv())
@@ -22,7 +21,7 @@ function parseCSV(filePath) {
         .on('end', () => {
             const endTime = new Date();
             const duration = endTime - startTime;
-            console.log(`Parsing ${fileName} took ${duration} milliseconds to read ${count} lines`);
+            console.log(`Parsing ${pathChunk[1]} took ${duration} milliseconds to read ${count} lines`);
             writeFile(`./converted/${fileName}`, JSON.stringify(results, undefined, 2), 'utf-8', (data) => { })
         })
 }

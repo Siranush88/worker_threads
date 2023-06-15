@@ -9,17 +9,41 @@ if (process.argv.length < 3) {
 }
 
 const csvFilesArray = await readdir(directoryPath);
+//const numWorkers = Math.min(10, csvFilesArray.length);
 
-const numThreads = csvFilesArray.length;
+//const numThreads = csvFilesArray.length;
 
+let numThreads = 0;
 let worker;
-for (let i = 0; i < numThreads; i++) {
-  worker = new Worker('./worker.js');
+let x = 0;
+if (csvFilesArray.length <= 10) {
+
+  numThreads = csvFilesArray.length;
+  for (let i = 0; i < numThreads; i++) {
+    worker = new Worker('./worker.js');
+    ++x
+  }
+  worker.on('online', (message) => {
+    for (let j = 0; j < csvFilesArray.length; j++) {
+      const csvFilePath = path.join(directoryPath, csvFilesArray[j])
+      worker.postMessage(csvFilePath);
+    }
+  });
+
+} else {
+
+  numThreads = 10;
+  for (let i = 0; i < numThreads; i++) {
+    worker = new Worker('./worker.js');
+    ++x
+  }
+  worker.on('online', (message) => {
+    for (let j = 0; j < csvFilesArray.length; j++) {
+      const csvFilePath = path.join(directoryPath, csvFilesArray[j])
+      worker.postMessage(csvFilePath);
+    }
+  });
+
 }
 
-worker.on('online', (message) => {
-  for (let i = 0; i < csvFilesArray.length; i++) {
-    const csvFilePath = path.join(directoryPath, csvFilesArray[i])
-    worker.postMessage(csvFilePath);
-  }
-});
+console.log('threads number is >>', x)
