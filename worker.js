@@ -21,15 +21,14 @@ function parseCSV(filePath) {
         .on('end', () => {
             const endTime = new Date();
             const duration = endTime - startTime;
-            console.log(`Parsing ${pathChunk[1]} took ${duration} milliseconds to read ${count} lines`);
             writeFile(`./converted/${fileName}`, JSON.stringify(results, undefined, 2), 'utf-8', (data) => { })
+            parentPort.postMessage({ count, duration });
         })
 }
 
 parentPort.on('message', message => {
     let filePath = message;
     let result = parseCSV(filePath);
-    parentPort.postMessage(result)
 })
 
 
